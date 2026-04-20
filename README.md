@@ -80,7 +80,7 @@ To package Clipt into a standalone Windows application that doesn't require Pyth
 Clipt is a product of **Human-AI Collaboration**, utilizing a multi-agent "Senior Developer" workflow.
 - **Lead Architect:** Noahain (Product Design, Python Lifecycle, Logic Direction)
 - **Primary Developer:** **Claude Code** (Powered by **Kimi K2.5**) - Implemented the core SQLite storage architecture, clipboard monitoring, and `pywebview` integration.
-- **Technical Consultant:** **Gemini 1.5 Flash** - Provided architectural guidance, visual design strategies, and cross-process communication fixes.
+- **Technical Consultant:** **Gemini 3 Flash** - Provided architectural guidance, visual design strategies, and cross-process communication fixes.
 
 ---
 
