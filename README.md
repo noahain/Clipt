@@ -28,6 +28,10 @@ This folder contains your `Days/` archive (databases and metadata) and your `.en
 - **Stealth Background Polishing**: Implements automation-controlled bypasses and high-quality Lanczos resampling for tray icons to ensure the app feels like a native part of the OS.
 - **Neumorphic Design**: A premium, dark-mode interface with a custom silver-border aesthetic (#bdbec0) that matches modern productivity workflows.
 
+![Clipt Banner](assets/screenshots/history.png)
+
+![Clipt Banner](assets/screenshots/chat.png)
+
 ---
 
 ## 🛠️ Command Line Arguments
