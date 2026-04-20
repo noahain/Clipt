@@ -54,10 +54,10 @@ git clone https://github.com/noahain/clipt
 cd clipt
 
 # Install dependencies
-pip install -r requirements.txt
+py -3.12 -m  pip install -r requirements.txt
 
 # Run the app
-python main.py
+py -3.12 main.py
 ```
 
 ---
@@ -68,7 +68,7 @@ To package Clipt into a standalone Windows application that doesn't require Pyth
 
 1. **Run the build script:**
    ```bash
-   python build_exe.py
+   py -3.12 -m PyInstaller Clipt.spec --clean
    ```
 2. **Locate your app:** The standalone binary will be generated in the `dist/` folder.
 3. **Icons:** The build automatically bundles the high-res `icon.ico` and `icon.png` for proper Windows taskbar and system tray scaling.
