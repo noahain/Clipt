@@ -1,0 +1,8 @@
+pywebview>=4.4.1
+pystray>=0.19.4
+Pillow>=10.0.0
+openai>=1.0.0
+python-dotenv>=1.0.0
+pyperclip>=1.8.2
+pyobjc-framework-Cocoa>=10.0; sys_platform == 'darwin'
+pyobjc-framework-ApplicationServices>=10.0; sys_platform == 'darwin'

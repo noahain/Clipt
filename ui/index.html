@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clipt</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- ── Sidebar ── -->
+    <aside id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <div class="brand-icon">
+            <img src="assets/icon.png" alt="Clipt">
+          </div>
+          <div class="brand-text">
+            <h1>Clipt</h1>
+            <p>Clipboard History</p>
+          </div>
+        </div>
+        <button id="refresh-btn" class="icon-btn" title="Refresh">
+          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          </svg>
+        </button>
+      </div>
+
+      <div id="days-list"></div>
+
+      <div class="sidebar-footer">
+        <span id="status-text" class="selectable" style="font-size:11px;color:#555;">Monitoring clipboard...</span>
+        <div id="status-indicator" class="status-dot"></div>
+      </div>
+    </aside>
+
+    <!-- ── Main ── -->
+    <main>
+      <!-- Top bar -->
+      <div class="topbar">
+        <div class="topbar-left">
+          <span id="current-date-title" class="topbar-title">Today</span>
+          <span id="clip-count" class="clip-badge">0 clips</span>
+        </div>
+        <div class="topbar-right">
+          <button id="view-history-btn" class="tab-btn active">History</button>
+          <button id="chat-btn" class="tab-btn">Chat with AI</button>
+        </div>
+      </div>
+
+      <!-- Content area -->
+      <div id="content-area">
+
+        <!-- History View -->
+        <div id="history-view">
+          <div id="clips-container"></div>
+          <div id="empty-state" class="hidden">
+            <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+            <h3>No clips yet</h3>
+            <p>Copy something to get started</p>
+          </div>
+        </div>
+
+        <!-- Chat View -->
+        <div id="chat-view" class="hidden" style="display:flex;flex-direction:column;height:100%;">
+          <!-- Chat header -->
+          <div class="chat-header">
+            <div class="chat-header-left">
+              <div class="chat-avatar">
+                <img src="assets/icon.png" alt="Clipt">
+              </div>
+              <div>
+                <div class="chat-name">Clipt</div>
+                <div class="chat-model">Qwen 3.5 122B</div>
+              </div>
+            </div>
+            <button class="new-chat-btn" onclick="window.app.startNewChat()">
+              <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+              </svg>
+              New Chat
+            </button>
+          </div>
+
+          <!-- Messages -->
+          <div id="chat-messages">
+            <div class="message-row ai">
+              <div class="msg-avatar ai">
+                <img src="assets/icon.png" alt="C">
+              </div>
+              <div class="chat-bubble">
+                <p>Hey! I'm Clipt. Select a day from the sidebar and ask me anything about what you copied.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Input -->
+          <div class="chat-input-area">
+            <div class="chat-input-row">
+              <textarea id="chat-input" rows="1" placeholder="Ask about your clipboard history..."></textarea>
+              <button id="send-btn" class="send-btn" onclick="window.app.sendMessage()">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                </svg>
+              </button>
+            </div>
+            <div class="chat-footer-note">NVIDIA NIM · Qwen-3.5-122B-A10B</div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Label Modal -->
+  <div id="label-modal" class="hidden">
+    <div class="modal-box">
+      <h3>Edit Day Label</h3>
+      <input type="text" id="label-input" class="modal-input" placeholder="Label for this day...">
+      <div class="modal-actions">
+        <button class="btn-ghost" onclick="window.app.closeLabelModal()">Cancel</button>
+        <button class="btn-primary" onclick="window.app.saveLabel()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast"><span id="toast-message"></span></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
