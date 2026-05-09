@@ -95,8 +95,3 @@ Python 3.12 · `pywebview` · SQLite · PowerShell · NVIDIA NIM · Qwen 3.5 (12
 
 MIT
 
----
-
-<div align="center">
-  Built with ❤️ and AI
-</div>
