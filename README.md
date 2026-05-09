@@ -1,97 +1,102 @@
-![Clipt Banner](assets/banner.png)
 
-**Clipt** is a high-performance, privacy-focused clipboard history manager and AI assistant. It silently tracks your digital workflow, organizing every snippet you copy into a searchable, daily database, and allows you to chat with your history using the power of elite-scale AI.
+<div align="center">
+  <img src="assets/icon2.png" width="144" height="144" alt="Clipt" />
+  <h1>Clipt</h1>
 
-## 🚀 Advanced Features
+  <p><strong>Clipboard history manager with AI search</strong></p>
 
-### 🧠 Intelligent UX
-- **Massive Context AI Chat**: Engage in deep conversations with your clipboard history using **Qwen 3.5 (122B)** via **NVIDIA NIM**. 
-- **256K Context Window**: Unlike standard clipboard managers, Clipt can process your entire day's history in a single prompt. Copy massive codebases, long documents, or thousands of snippets—the AI remembers it all.
-- **Smart Window Management**: 
-  - **Single Instance Lock**: Built-in socket-based protection ensures only one instance of Clipt runs at a time, preventing duplicate tray icons or process bloat.
-  - **Close-to-Tray**: The app stays active in the system tray when closed, ensuring not a single clipboard event is missed.
-- **Silent Clipboard Operations**: Custom PowerShell integration allows the app to write to your clipboard silently without flashing terminal windows.
-
-### 🔒 Privacy & Organization
-- **Daily History Vaults**: Your data is automatically organized into daily folders (`/Days/YYYY-MM-DD/`). Each day is powered by its own isolated **SQLite** database for maximum performance and portability.
-- **Local-First Persistence**: All clips and configurations are stored securely in your system's data directory. Your history never leaves your machine.
-- **Markdown Mastery**: Full support for rendering Markdown in AI responses, including syntax-highlighted code blocks, bold text, and structured lists.
-
-### 📂 Data & Privacy
-Clipt is built on the principle of data ownership. On the first launch, the app initializes a private workspace:
-- **Windows:** `%APPDATA%/Clipt`
-
-This folder contains your `Days/` archive (databases and metadata) and your `.env` configuration. Clipt does not use external cloud storage for your clips; your data remains strictly local.
-
-### ⚡ Performance & Polish
-- **Resource Efficient**: Built with Python 3.12 and `pywebview` to maintain a light footprint while providing a rich, modern UI.
-- **Stealth Background Polishing**: Implements automation-controlled bypasses and high-quality Lanczos resampling for tray icons to ensure the app feels like a native part of the OS.
-- **Neumorphic Design**: A premium, dark-mode interface with a custom silver-border aesthetic (#bdbec0) that matches modern productivity workflows.
-
-![Clipt Banner](assets/screenshots/history.png)
-
-![Clipt Banner](assets/screenshots/chat.png)
+  <p>
+    <img src="https://img.shields.io/badge/version-1.0.1-blue" alt="version" />
+    <img src="https://img.shields.io/badge/license-MIT-green" alt="license" />
+    <img src="https://img.shields.io/badge/platform-Windows-lightgrey" alt="platform" />
+    <img src="https://img.shields.io/badge/python-3.12-blue" alt="python" />
+  </p>
+</div>
 
 ---
 
-## 🛠️ Command Line Arguments
+Clipt runs in your system tray. It records everything you copy, organizes snippets into daily databases, and lets you search or chat with your history.
 
-Clipt supports a specialized startup mode for automation:
+## Screenshots
 
-| Argument | Description |
+<table>
+  <tr>
+    <td align="center"><img src="assets/screenshots/history.png" alt="History view" /><br/><sub>Daily history</sub></td>
+    <td align="center"><img src="assets/screenshots/chat.png" alt="AI chat" /><br/><sub>Chat with your clipboard history</sub></td>
+  </tr>
+</table>
+
+## What it does
+
+**Clipboard monitoring**
+- Captures everything you copy
+- Closes to the system tray, keeps recording
+- Writes to your clipboard without flashing terminal windows
+
+**Storage**
+- Daily folders: `/Days/YYYY-MM-DD/`
+- One SQLite database per day
+- Data stays on your machine
+
+**AI chat**
+- Uses Qwen 3.5 (122B) via NVIDIA NIM
+- Handles your entire day's history in one conversation
+- Renders Markdown: code blocks, bold text, lists
+
+**Interface**
+- Dark mode with silver borders
+- Light on system resources
+
+## Where data lives
+
+| Platform | Path |
 | :--- | :--- |
-| `--startup` | Launches Clipt directly to the system tray. No window will appear until you click the tray icon. Perfect for adding to your "Startup" folder. |
+| **Windows** | `%APPDATA%/Clipt` |
 
----
+The folder contains your `Days/` archive and `.env` configuration. Clipt does not send your clips to the cloud.
 
-## 📥 Installation
+## Command line
 
-### 1. Prerequisites
-Ensure you have [Python 3.12](https://www.python.org/) installed.
+| Argument | Effect |
+| :--- | :--- |
+| `--startup` | Launches to system tray without opening a window |
 
-### 2. Setup
+## Install
+
+**Requirements**
+- [Python 3.12](https://www.python.org/)
+
 ```bash
-# Clone the repository
 git clone https://github.com/noahain/clipt
-
-# Enter the project folder
 cd clipt
-
-# Install dependencies
-py -3.12 -m  pip install -r requirements.txt
-
-# Run the app
+py -3.12 -m pip install -r requirements.txt
 py -3.12 main.py
 ```
 
+## Build executable
+
+```bash
+py -3.12 -m PyInstaller Clipt.spec --clean
+```
+
+The `.exe` appears in `dist/`. The build bundles `icon.ico` and `icon.png` for taskbar and tray scaling.
+
+## Development team
+
+- **Lead:** Noahain — product design, Python lifecycle
+- **Primary developer:** Claude Code (Kimi K2.5) — SQLite, clipboard monitoring, `pywebview`
+- **Technical consultant:** Gemini 3 Flash — architecture, visuals, cross-process communication
+
+## Tech stack
+
+Python 3.12 · `pywebview` · SQLite · PowerShell · NVIDIA NIM · Qwen 3.5 (122B)
+
+## License
+
+MIT
+
 ---
 
-## 📦 Building the Executable (.EXE)
-
-To package Clipt into a standalone Windows application that doesn't require Python:
-
-1. **Run the build script:**
-   ```bash
-   py -3.12 -m PyInstaller Clipt.spec --clean
-   ```
-2. **Locate your app:** The standalone binary will be generated in the `dist/` folder.
-3. **Icons:** The build automatically bundles the high-res `icon.ico` and `icon.png` for proper Windows taskbar and system tray scaling.
-
----
-
-## 🤖 Agentic Development (The Story)
-
-Clipt is a product of **Human-AI Collaboration**, utilizing a multi-agent "Senior Developer" workflow.
-- **Lead Architect:** Noahain (Product Design, Python Lifecycle, Logic Direction)
-- **Primary Developer:** **Claude Code** (Powered by **Kimi K2.5**) - Implemented the core SQLite storage architecture, clipboard monitoring, and `pywebview` integration.
-- **Technical Consultant:** **Gemini 3 Flash** - Provided architectural guidance, visual design strategies, and cross-process communication fixes.
-
----
-
-## ⚖️ License & Disclaimer
-Clipt is an independent productivity tool. AI responses are powered by NVIDIA NIM (Qwen 3.5 122B). Use at your own risk.
-
-**License:** MIT 
-
-Built with ❤️ and Artificial Intelligence.
-
+<div align="center">
+  Built with ❤️ and AI
+</div>
