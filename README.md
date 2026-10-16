@@ -55,9 +55,6 @@ The frontend alone can be built with `bun run build` (tsc + Vite → `web-dist/`
 - `src/` — frontend: `bridge.ts` entry, `app.js` window UI, `styles.css`
 - `src-tauri/` — Rust backend: clipboard listener, SQLite storage, tray, IPC commands
 - `index.html` — main window shell
-- `docs/superpowers/specs/` — the Tauri rewrite design spec
-- `AGENTS.md` — working notes for AI agents (architecture, hard rules)
-- `DESIGN.md` — UI design-system reference
 
 ## Recommended IDE Setup
 

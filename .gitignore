@@ -16,9 +16,13 @@ web-dist
 # Old pywebview app (reference only, contains .venv, .env, build artifacts)
 pywebview old version/
 
+# Local-only docs and agent files (not published to GitHub)
+docs/
+AGENTS.md
+DESIGN.md
+
 # Editor directories and files
-.vscode/*
-!.vscode/extensions.json
+.vscode/
 .idea
 .DS_Store
 *.suo
