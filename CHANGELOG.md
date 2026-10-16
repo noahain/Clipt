@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project follows [Semantic Versioning](https://semver.org/). Version 1.x was the original Python/pywebview app; its releases remain available under the v1.x tags.
 
+## [2.0.1] - 2026-10-16
+
+### Changed
+
+- New application icon across the window, tray, and installers.
+
 ## [2.0.0] - 2026-10-16
 
 Complete rewrite of Clipt in Rust + Tauri 2. No Python runtime required: a single native Windows application with event-driven clipboard capture. Existing 1.x history and settings are imported automatically on first launch (old data is opened read-only).
