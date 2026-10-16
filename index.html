@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clipt</title>
+  <link rel="stylesheet" href="/src/styles.css" />
+  <script type="module" src="/src/bridge.ts"></script>
+</head>
+<body class="custom-titlebar-active">
+
+  <!-- Background overlay -->
+  <div id="bg-overlay"></div>
+
+  <!-- ── Custom titlebar ── -->
+  <div id="custom-titlebar" data-tauri-drag-region>
+    <div class="titlebar-left" data-tauri-drag-region>
+      <button id="refresh-btn" class="titlebar-btn" title="Refresh">
+        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+        </svg>
+      </button>
+    </div>
+    <div class="titlebar-center" data-tauri-drag-region>
+      <span class="titlebar-title" data-tauri-drag-region>Clipt</span>
+    </div>
+    <div class="titlebar-right" data-tauri-drag-region>
+      <button id="tb-menu" class="titlebar-btn" title="Menu">
+        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+      <button id="tb-minimize" class="titlebar-btn" title="Minimize">
+        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"/>
+        </svg>
+      </button>
+      <button id="tb-maximize" class="titlebar-btn" title="Maximize">
+        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <rect x="5" y="5" width="14" height="14" rx="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+        </svg>
+      </button>
+      <button id="tb-close" class="titlebar-btn titlebar-close-btn" title="Close">
+        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 6l12 12M18 6L6 18"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- App menu -->
+    <div id="app-menu" class="hidden">
+      <button id="menu-pause" class="app-menu-item">Pause</button>
+      <button id="menu-refresh" class="app-menu-item">Refresh</button>
+      <div class="app-menu-sep"></div>
+      <div id="menu-pins"></div>
+      <div class="app-menu-sep"></div>
+      <button id="menu-exit" class="app-menu-item app-menu-danger">Exit</button>
+    </div>
+  </div>
+
+  <div id="app">
+
+    <!-- ── Sidebar ── -->
+    <aside id="sidebar">
+      <div id="days-list"></div>
+    </aside>
+
+    <!-- ── Main ── -->
+    <main>
+      <div class="header-card">
+        <div class="header-left">
+          <span id="current-date-title" class="header-title">Today</span>
+          <span id="clip-count" class="badge">0 clips</span>
+        </div>
+        <div id="search-wrap" class="search-wrap">
+          <input id="search-input" class="settings-input search-input" placeholder="Search clips…" spellcheck="false" />
+          <button id="search-scope-btn" class="scope-btn" title="Search all days">Global</button>
+        </div>
+        <div class="segmented">
+          <button id="view-history-btn" class="tab-btn active">History</button>
+          <button id="view-settings-btn" class="tab-btn">Settings</button>
+        </div>
+      </div>
+
+      <div id="content-area">
+
+        <!-- History View -->
+        <div id="history-view" class="content-panel">
+          <div id="clips-container"></div>
+          <div id="empty-state" class="hidden">
+            <svg width="36" height="36" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+            <h3>No clips yet</h3>
+            <p>Copy something to get started</p>
+          </div>
+        </div>
+
+        <!-- Settings View -->
+        <div id="settings-view" class="content-panel hidden">
+          <div class="settings-card">
+            <h3>Theme</h3>
+            <p>Base color mode for the whole app.</p>
+            <div class="setting-row">
+              <span class="setting-label">Mode</span>
+              <div class="segmented" id="theme-mode-seg">
+                <button class="tab-btn" data-value="dark">Dark</button>
+                <button class="tab-btn" data-value="light">Light</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <h3>Surfaces</h3>
+            <p>Style of the glass surfaces: titlebar, sidebar, panels, modals.</p>
+            <div class="setting-row">
+              <span class="setting-label">Style</span>
+              <div class="segmented" id="cta-style-seg">
+                <button class="tab-btn" data-value="blur">Blur</button>
+                <button class="tab-btn" data-value="glass">Glass</button>
+                <button class="tab-btn" data-value="solid">Solid</button>
+                <button class="tab-btn" data-value="outline">Outline</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <h3>Background</h3>
+            <p>Backdrop behind the app surface.</p>
+            <div class="setting-row">
+              <span class="setting-label">Type</span>
+              <div class="segmented" id="bg-type-seg">
+                <button class="tab-btn" data-value="none">None</button>
+                <button class="tab-btn" data-value="color">Color</button>
+                <button class="tab-btn" data-value="gradient">Gradient</button>
+              </div>
+            </div>
+            <div class="setting-row hidden" id="bg-color-row">
+              <span class="setting-label">Color</span>
+              <input type="color" id="bg-color-input" class="bg-color-picker" value="#0a0a0a">
+            </div>
+            <div class="setting-row hidden" id="bg-gradient-row">
+              <span class="setting-label">Preset</span>
+              <div class="gradient-grid" id="gradient-grid"></div>
+            </div>
+            <div class="setting-row hidden" id="bg-transparency-row">
+              <span class="setting-label">Opacity</span>
+              <div class="setting-slider">
+                <input type="range" id="bg-transparency" class="transparency-slider" min="0" max="100" value="75">
+                <span id="bg-transparency-val" class="setting-value">75</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <h3>Updates</h3>
+            <p>Checks GitHub Releases for new versions.</p>
+            <div class="setting-row">
+              <span class="setting-label">Version</span>
+              <span class="setting-value" id="app-version">-</span>
+            </div>
+            <div class="setting-row">
+              <span class="setting-label">Check now</span>
+              <button id="check-updates-btn" class="id-btn-primary">Check for updates</button>
+            </div>
+            <p id="update-status" class="update-status"></p>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Label Modal -->
+  <div id="label-modal" class="hidden">
+    <div class="id-modal">
+      <h3>Edit Day Label</h3>
+      <input type="text" id="label-input" class="settings-input" placeholder="Label for this day...">
+      <div class="id-actions">
+        <button class="id-btn-cancel">Cancel</button>
+        <button class="id-btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pin Modal -->
+  <div id="pin-modal" class="hidden">
+    <div class="id-modal">
+      <h3>Pin</h3>
+      <div id="pin-target-label" class="pin-target"></div>
+      <input type="text" id="pin-note-input" class="settings-input" placeholder="Add a name (optional)...">
+      <div class="id-actions">
+        <button class="id-btn-cancel">Cancel</button>
+        <button id="pin-unpin-btn" class="id-btn-danger hidden">Unpin</button>
+        <button id="pin-save-btn" class="id-btn-primary">Pin</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast"><span id="toast-message"></span></div>
+
+</body>
+</html>
