@@ -75,6 +75,7 @@ pub fn run() {
                 }
             }
 
+            let start_minimized = st.start_minimized;
             app.manage(AppState::new(db, st));
 
             if let Err(e) = tray::build_tray(app.handle()) {
@@ -82,7 +83,7 @@ pub fn run() {
             }
 
             let startup = std::env::args().any(|a| a == "--startup");
-            if !startup && let Some(w) = app.get_webview_window("main") {
+            if !startup && !start_minimized && let Some(w) = app.get_webview_window("main") {
                 let _ = w.show();
             }
 

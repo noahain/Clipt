@@ -61,6 +61,8 @@ pub struct Settings {
     pub theme: ThemeSettings,
     #[serde(default)]
     pub launch_at_login: bool,
+    #[serde(default)]
+    pub start_minimized: bool,
 }
 
 fn default_true() -> bool {
@@ -141,6 +143,8 @@ struct SettingsPatch {
     theme: Option<ThemePatch>,
     #[serde(alias = "launch_at_login")]
     launch_at_login: Option<bool>,
+    #[serde(alias = "start_minimized")]
+    start_minimized: Option<bool>,
 }
 
 #[derive(Deserialize)]
@@ -267,6 +271,9 @@ impl Settings {
         }
         if let Some(v) = patch.launch_at_login {
             self.launch_at_login = v;
+        }
+        if let Some(v) = patch.start_minimized {
+            self.start_minimized = v;
         }
         if let Some(theme) = patch.theme {
             if let Some(v) = theme.theme_mode {
@@ -415,11 +422,13 @@ mod tests {
         let patch = serde_json::json!({
             "capture": { "maxImageBytes": 10 },
             "launchAtLogin": true,
+            "startMinimized": true,
             "ai": { "model": "x/y" }
         });
         s.apply_patch(&patch);
         assert_eq!(s.capture.max_image_bytes, MIN_IMAGE_BYTES);
         assert!(s.launch_at_login);
+        assert!(s.start_minimized);
         assert_eq!(s.ai.model, "x/y");
         assert_eq!(s.ai.api_key, "");
     }
@@ -430,11 +439,13 @@ mod tests {
         s.apply_patch(&serde_json::json!({
             "ai": { "api_key": "k" },
             "capture": { "max_image_bytes": 4096 },
-            "launch_at_login": true
+            "launch_at_login": true,
+            "start_minimized": true
         }));
         assert_eq!(s.ai.api_key, "k");
         assert_eq!(s.capture.max_image_bytes, 4096);
         assert!(s.launch_at_login);
+        assert!(s.start_minimized);
     }
 
     #[test]

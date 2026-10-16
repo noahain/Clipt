@@ -99,6 +99,25 @@
         <!-- Settings View -->
         <div id="settings-view" class="content-panel hidden">
           <div class="settings-card">
+            <h3>Startup</h3>
+            <p>Run Clipt with Windows and start it quietly in the tray.</p>
+            <div class="setting-row">
+              <span class="setting-label">Run on startup</span>
+              <div class="segmented" id="launch-at-login-seg">
+                <button class="tab-btn" data-value="off">Off</button>
+                <button class="tab-btn" data-value="on">On</button>
+              </div>
+            </div>
+            <div class="setting-row">
+              <span class="setting-label">Start minimized</span>
+              <div class="segmented" id="start-minimized-seg">
+                <button class="tab-btn" data-value="off">Off</button>
+                <button class="tab-btn" data-value="on">On</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-card">
             <h3>Theme</h3>
             <p>Base color mode for the whole app.</p>
             <div class="setting-row">

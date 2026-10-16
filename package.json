@@ -1,7 +1,8 @@
 {
   "name": "clipt",
   "private": true,
-  "version": "2.0.1",
+  "version": "2.0.2",
+  "author": "noahain",
   "type": "module",
   "scripts": {
     "dev": "vite",

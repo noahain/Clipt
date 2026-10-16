@@ -36,6 +36,10 @@ class CliptApp {
       bgGradient: '',
       bgTransparency: 75,
     };
+    this.startup = {
+      launchAtLogin: false,
+      startMinimized: false,
+    };
 
     this.el = {
       daysList:          document.getElementById('days-list'),
@@ -80,6 +84,8 @@ class CliptApp {
       bgTransparencyRow: document.getElementById('bg-transparency-row'),
       bgTransparency:    document.getElementById('bg-transparency'),
       bgTransparencyVal: document.getElementById('bg-transparency-val'),
+      launchAtLoginSeg:  document.getElementById('launch-at-login-seg'),
+      startMinimizedSeg: document.getElementById('start-minimized-seg'),
       appVersion:        document.getElementById('app-version'),
       checkUpdatesBtn:   document.getElementById('check-updates-btn'),
       updateStatus:      document.getElementById('update-status'),
@@ -146,6 +152,14 @@ class CliptApp {
     this.el.bgTypeSeg.addEventListener('click', e => {
       const btn = e.target.closest('[data-value]');
       if (btn) this.setThemeValue('bgType', btn.dataset.value);
+    });
+    this.el.launchAtLoginSeg.addEventListener('click', e => {
+      const btn = e.target.closest('[data-value]');
+      if (btn) this.setStartupValue('launchAtLogin', btn.dataset.value === 'on');
+    });
+    this.el.startMinimizedSeg.addEventListener('click', e => {
+      const btn = e.target.closest('[data-value]');
+      if (btn) this.setStartupValue('startMinimized', btn.dataset.value === 'on');
     });
     this.el.bgColorInput.addEventListener('input', () => {
       this.theme.bgColor = this.el.bgColorInput.value;
@@ -789,6 +803,10 @@ class CliptApp {
     try {
       const s = await invoke('get_settings');
       if (s && s.theme) this.theme = { ...this.theme, ...s.theme };
+      if (s) {
+        this.startup.launchAtLogin = !!s.launchAtLogin;
+        this.startup.startMinimized = !!s.startMinimized;
+      }
     } catch (err) {
       console.warn('settings unavailable:', err);
     }
@@ -841,6 +859,20 @@ class CliptApp {
     }
   }
 
+  setStartupValue(key, value) {
+    this.startup[key] = value;
+    this.syncSettingsUI();
+    this.saveStartup();
+  }
+
+  async saveStartup() {
+    try {
+      await invoke('update_settings', { patch: { ...this.startup } });
+    } catch (err) {
+      console.warn('startup settings save failed:', err);
+    }
+  }
+
   syncSettingsUI() {
     const mark = (seg, value) => {
       seg.querySelectorAll('[data-value]').forEach(b => b.classList.toggle('active', b.dataset.value === value));
@@ -848,6 +880,8 @@ class CliptApp {
     mark(this.el.themeModeSeg, this.theme.themeMode);
     mark(this.el.ctaStyleSeg, this.theme.ctaStyle);
     mark(this.el.bgTypeSeg, this.theme.bgType);
+    mark(this.el.launchAtLoginSeg, this.startup.launchAtLogin ? 'on' : 'off');
+    mark(this.el.startMinimizedSeg, this.startup.startMinimized ? 'on' : 'off');
     this.el.bgColorRow.classList.toggle('hidden', this.theme.bgType !== 'color');
     this.el.bgGradientRow.classList.toggle('hidden', this.theme.bgType !== 'gradient');
     this.el.bgTransparencyRow.classList.toggle('hidden', this.theme.bgType === 'none');
