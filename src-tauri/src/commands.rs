@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use tauri::{AppHandle, Emitter, State};
+use tauri::{AppHandle, Emitter, Manager, State};
 
 use crate::clipboard;
 use crate::paths;
@@ -219,6 +219,17 @@ pub fn copy_clip(app: AppHandle, state: State<AppState>, id: i64) -> Result<bool
 #[tauri::command]
 pub fn get_settings(state: State<AppState>) -> Result<Settings, String> {
     Ok(state.settings.lock().map_err(|e| e.to_string())?.clone())
+}
+
+#[tauri::command]
+pub fn allow_background_image(app: AppHandle, path: String) -> Result<(), String> {
+    let p = std::path::Path::new(&path);
+    if !p.is_file() {
+        return Err("background image not found".to_string());
+    }
+    app.asset_protocol_scope()
+        .allow_file(p)
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]

@@ -835,6 +835,10 @@ body.light-mode .id-modal {
   box-shadow: 0 0 0 1px rgba(92, 156, 245, 0.35);
 }
 
+.bg-image-controls { display: flex; align-items: center; gap: 10px; min-width: 0; }
+
+.bg-image-name { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
 .transparency-slider {
   -webkit-appearance: none;
   appearance: none;

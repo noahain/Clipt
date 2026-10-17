@@ -48,6 +48,8 @@ pub struct ThemeSettings {
     pub bg_gradient: String,
     #[serde(default = "default_bg_transparency")]
     pub bg_transparency: u8,
+    #[serde(default)]
+    pub bg_image: String,
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
@@ -131,6 +133,7 @@ impl Default for ThemeSettings {
             bg_color: default_bg_color(),
             bg_gradient: String::new(),
             bg_transparency: default_bg_transparency(),
+            bg_image: String::new(),
         }
     }
 }
@@ -176,6 +179,7 @@ struct ThemePatch {
     bg_color: Option<String>,
     bg_gradient: Option<String>,
     bg_transparency: Option<u64>,
+    bg_image: Option<String>,
 }
 
 impl Settings {
@@ -189,7 +193,7 @@ impl Settings {
         if !["blur", "glass", "solid", "outline"].contains(&self.theme.cta_style.as_str()) {
             self.theme.cta_style = default_cta_style();
         }
-        if !["none", "color", "gradient"].contains(&self.theme.bg_type.as_str()) {
+        if !["none", "color", "gradient", "image"].contains(&self.theme.bg_type.as_str()) {
             self.theme.bg_type = default_bg_type();
         }
         if !is_hex_color(&self.theme.bg_color) {
@@ -197,6 +201,12 @@ impl Settings {
         }
         if self.theme.bg_gradient.len() > 256 {
             self.theme.bg_gradient.clear();
+        }
+        if self.theme.bg_image.len() > 4096 {
+            self.theme.bg_image.clear();
+        }
+        if self.theme.bg_type == "image" && self.theme.bg_image.is_empty() {
+            self.theme.bg_type = default_bg_type();
         }
         if self.theme.bg_transparency > 100 {
             self.theme.bg_transparency = 100;
@@ -293,6 +303,9 @@ impl Settings {
             }
             if let Some(v) = theme.bg_transparency {
                 self.theme.bg_transparency = v.min(100) as u8;
+            }
+            if let Some(v) = theme.bg_image {
+                self.theme.bg_image = v;
             }
         }
         self.clamp();
@@ -414,6 +427,19 @@ mod tests {
         assert_eq!(s.theme.bg_type, "gradient");
         assert_eq!(s.theme.bg_gradient, "linear-gradient(#000, #111)");
         assert_eq!(s.theme.bg_transparency, 100);
+    }
+
+    #[test]
+    fn image_background_requires_path() {
+        let mut s = Settings::default();
+        assert_eq!(s.theme.bg_image, "");
+        s.apply_patch(&serde_json::json!({ "theme": { "bgType": "image" } }));
+        assert_eq!(s.theme.bg_type, "none");
+        s.apply_patch(&serde_json::json!({
+            "theme": { "bgType": "image", "bgImage": "C:\\pics\\wall.png" }
+        }));
+        assert_eq!(s.theme.bg_type, "image");
+        assert_eq!(s.theme.bg_image, "C:\\pics\\wall.png");
     }
 
     #[test]

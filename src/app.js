@@ -5,6 +5,7 @@ import { getVersion } from "@tauri-apps/api/app";
 import { invoke, convertFileSrc } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import { open } from "@tauri-apps/plugin-dialog";
 
 import { checkForUpdates, initUpdater } from "./updater.js";
 
@@ -35,6 +36,7 @@ class CliptApp {
       bgColor: '#0a0a0a',
       bgGradient: '',
       bgTransparency: 75,
+      bgImage: '',
     };
     this.startup = {
       launchAtLogin: false,
@@ -84,6 +86,9 @@ class CliptApp {
       bgTransparencyRow: document.getElementById('bg-transparency-row'),
       bgTransparency:    document.getElementById('bg-transparency'),
       bgTransparencyVal: document.getElementById('bg-transparency-val'),
+      bgImageRow:        document.getElementById('bg-image-row'),
+      bgImageBtn:        document.getElementById('bg-image-btn'),
+      bgImageName:       document.getElementById('bg-image-name'),
       launchAtLoginSeg:  document.getElementById('launch-at-login-seg'),
       startMinimizedSeg: document.getElementById('start-minimized-seg'),
       appVersion:        document.getElementById('app-version'),
@@ -172,6 +177,7 @@ class CliptApp {
       this.applyBackground();
     });
     this.el.bgTransparency.addEventListener('change', () => this.saveTheme());
+    this.el.bgImageBtn.addEventListener('click', () => this.pickBackgroundImage());
 
     this.el.tbMinimize.addEventListener('click', () => getCurrentWindow().minimize());
     this.el.tbMaximize.addEventListener('click', () => getCurrentWindow().toggleMaximize());
@@ -840,15 +846,38 @@ class CliptApp {
   applyBackground() {
     const o = this.el.bgOverlay;
     if (!o) return;
-    const { bgType, bgColor, bgGradient, bgTransparency } = this.theme;
-    if (bgType === 'none') {
+    const { bgType, bgColor, bgGradient, bgImage, bgTransparency } = this.theme;
+    if (bgType === 'none' || (bgType === 'image' && !bgImage)) {
       o.style.display = 'none';
       o.style.background = '';
       return;
     }
     o.style.display = 'block';
-    o.style.background = bgType === 'color' ? bgColor : (bgGradient || GRADIENT_PRESETS[0]);
+    if (bgType === 'image') {
+      o.style.background = `url("${convertFileSrc(bgImage)}") center / cover no-repeat`;
+    } else {
+      o.style.background = bgType === 'color' ? bgColor : (bgGradient || GRADIENT_PRESETS[0]);
+    }
     o.style.opacity = String(bgTransparency / 100);
+  }
+
+  async pickBackgroundImage() {
+    try {
+      const path = await open({
+        multiple: false,
+        filters: [{ name: 'Images', extensions: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'avif'] }],
+      });
+      if (!path) return;
+      await invoke('allow_background_image', { path });
+      this.theme.bgImage = path;
+      this.theme.bgType = 'image';
+      this.applyTheme();
+      this.syncSettingsUI();
+      this.saveTheme();
+    } catch (err) {
+      console.warn('background image pick failed:', err);
+      this.showToast('Could not load image');
+    }
   }
 
   async saveTheme() {
@@ -884,8 +913,11 @@ class CliptApp {
     mark(this.el.startMinimizedSeg, this.startup.startMinimized ? 'on' : 'off');
     this.el.bgColorRow.classList.toggle('hidden', this.theme.bgType !== 'color');
     this.el.bgGradientRow.classList.toggle('hidden', this.theme.bgType !== 'gradient');
+    this.el.bgImageRow.classList.toggle('hidden', this.theme.bgType !== 'image');
     this.el.bgTransparencyRow.classList.toggle('hidden', this.theme.bgType === 'none');
     this.el.bgColorInput.value = this.theme.bgColor;
+    this.el.bgImageName.textContent = this.theme.bgImage ? this.theme.bgImage.split(/[\\/]/).pop() : 'No image';
+    this.el.bgImageName.title = this.theme.bgImage;
     this.el.bgTransparency.value = String(this.theme.bgTransparency);
     this.el.bgTransparencyVal.textContent = String(this.theme.bgTransparency);
     this.renderGradientGrid();

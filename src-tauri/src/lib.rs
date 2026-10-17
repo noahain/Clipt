@@ -39,6 +39,7 @@ pub fn run() {
         )
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_process::init())
+        .plugin(tauri_plugin_dialog::init())
         .on_window_event(|window, event| {
             if let tauri::WindowEvent::CloseRequested { api, .. } = event {
                 api.prevent_close();
@@ -76,6 +77,12 @@ pub fn run() {
             }
 
             let start_minimized = st.start_minimized;
+            if !st.theme.bg_image.is_empty()
+                && let Err(e) =
+                    commands::allow_background_image(app.handle().clone(), st.theme.bg_image.clone())
+            {
+                log::warn!("background image allow failed: {e}");
+            }
             app.manage(AppState::new(db, st));
 
             if let Err(e) = tray::build_tray(app.handle()) {
@@ -103,6 +110,7 @@ pub fn run() {
             commands::delete_clip,
             commands::copy_clip,
             commands::get_settings,
+            commands::allow_background_image,
             commands::update_settings,
             commands::get_watcher_state,
             commands::set_paused,
