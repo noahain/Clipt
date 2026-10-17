@@ -221,15 +221,44 @@ pub fn get_settings(state: State<AppState>) -> Result<Settings, String> {
     Ok(state.settings.lock().map_err(|e| e.to_string())?.clone())
 }
 
+fn is_image_path(p: &std::path::Path) -> bool {
+    const IMAGE_EXTENSIONS: [&str; 7] = ["png", "jpg", "jpeg", "gif", "webp", "bmp", "avif"];
+    p.extension()
+        .and_then(|e| e.to_str())
+        .is_some_and(|e| IMAGE_EXTENSIONS.contains(&e.to_ascii_lowercase().as_str()))
+}
+
 #[tauri::command]
 pub fn allow_background_image(app: AppHandle, path: String) -> Result<(), String> {
     let p = std::path::Path::new(&path);
+    if !is_image_path(p) {
+        return Err("background image must be png, jpg, jpeg, gif, webp, bmp, or avif".to_string());
+    }
     if !p.is_file() {
         return Err("background image not found".to_string());
     }
     app.asset_protocol_scope()
         .allow_file(p)
         .map_err(|e| e.to_string())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn image_path_extension_allowlist() {
+        let dir = tempfile::tempdir().unwrap();
+        let png = dir.path().join("wall.PNG");
+        std::fs::write(&png, b"x").unwrap();
+        assert!(is_image_path(&png));
+        assert!(is_image_path(std::path::Path::new("C:\\pics\\photo.jpeg")));
+        let txt = dir.path().join("notes.txt");
+        std::fs::write(&txt, b"x").unwrap();
+        assert!(!is_image_path(&txt));
+        assert!(!is_image_path(std::path::Path::new("no-extension")));
+        assert!(!is_image_path(std::path::Path::new("C:\\pics\\evil.png.exe")));
+    }
 }
 
 #[tauri::command]
