@@ -871,10 +871,7 @@ class CliptApp {
       if (!path) return;
       await invoke('allow_background_image', { path });
       this.theme.bgImage = path;
-      this.theme.bgType = 'image';
-      this.applyTheme();
-      this.syncSettingsUI();
-      this.saveTheme();
+      this.setThemeValue('bgType', 'image');
     } catch (err) {
       console.warn('background image pick failed:', err);
       this.showToast('Could not load image');
