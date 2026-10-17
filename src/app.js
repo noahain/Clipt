@@ -387,7 +387,8 @@ class CliptApp {
         }
         this.loadDays();
       });
-      await listen('clips-changed', (e) => {
+      await listen('clips-changed', async (e) => {
+        await this.loadPins();
         const date = e?.payload?.date || this.currentDate;
         if (this.isSearching()) {
           this.runSearch(this.el.searchInput.value.trim());
