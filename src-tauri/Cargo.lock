@@ -667,7 +667,7 @@ dependencies = [
 
 [[package]]
 name = "clipt"
-version = "2.0.2"
+version = "2.0.3"
 dependencies = [
  "anyhow",
  "arboard",

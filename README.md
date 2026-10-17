@@ -13,7 +13,7 @@
   <p>Records everything you copy — text, images, and files — into a searchable history organized by day, so you can find and re-copy anything later.</p>
 
   <p>
-    <img src="https://img.shields.io/badge/version-2.0.2-blue" alt="version" />
+    <img src="https://img.shields.io/badge/version-2.0.3-blue" alt="version" />
     <img src="https://img.shields.io/badge/license-MIT-green" alt="license" />
     <img src="https://img.shields.io/badge/platform-Windows-lightgrey" alt="platform" />
     <img src="https://img.shields.io/badge/rust-1.85-orange" alt="rust" />
@@ -70,7 +70,7 @@ bun run tauri build
 - **Pins** for clips and days, with an optional note
 - **One-click copy** — paste any entry back to the clipboard
 - **Tray controls** — open, pause, and resume; optional run on startup and start minimized to the tray
-- **Themes** — dark/light modes with background and surface-style options
+- **Themes** — dark/light modes with color, gradient, or image backgrounds and surface-style options
 - **Auto-updates** — signed release artifacts, verified before install
 - **Imports history** from the original Python version of the app on first launch
 
@@ -150,7 +150,8 @@ Clipt stores everything under `%APPDATA%\Clipt\`:
 | `capture.maxImageBytes` | `26214400` | Largest image to capture (25 MB) |
 | `theme.themeMode` | `dark` | `dark` or `light` |
 | `theme.ctaStyle` | `blur` | `blur`, `glass`, `solid`, or `outline` |
-| `theme.bgType` | `none` | `none`, `color`, or `gradient` |
+| `theme.bgType` | `none` | `none`, `color`, `gradient`, or `image` |
+| `theme.bgImage` | `""` | Path to the background image (used when `bgType` is `image`) |
 | `theme.bgTransparency` | `75` | Background transparency (0–100) |
 | `launchAtLogin` | `false` | Start Clipt when you sign in |
 | `startMinimized` | `false` | Start Clipt in the tray without showing the window |

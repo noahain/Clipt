@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project follows [Semantic Versioning](https://semver.org/). Version 1.x was the original Python/pywebview app; its releases remain available under the v1.x tags.
 
+## [2.0.3] - 2026-10-17
+
+### Added
+
+- Image backgrounds: choose any image file as the app background, with the same transparency control as color and gradient backgrounds.
+
+### Fixed
+
+- Pinned clips no longer stay in the pin menu after the underlying clip is deleted.
+- The unpin button in the pin modal now matches the other modal buttons.
+
 ## [2.0.2] - 2026-10-17
 
 ### Added
